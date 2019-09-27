@@ -23,6 +23,10 @@ module.exports = function(server) {
     const Anexo = require('../api/Anexo/AnexoService');
     Anexo.register(protectedApi, '/anexos');
 
+    // Rotas da Disciplinas
+    const Disciplinas = require('../api/disciplina/disciplinaService');
+    Disciplinas.register(protectedApi, '/disciplinas');
+
     // Rotas do usuario
     const User = require('../api/user/userService');
     User.register(protectedApi, '/users');

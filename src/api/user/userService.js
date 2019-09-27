@@ -1,6 +1,8 @@
-const Resposta = require('./user');
+const User = require('./user');
+const errorHandler = require('../common/errorHandler');
 
-Resposta.methods(['get', 'put', 'delete']);
-Resposta.updateOptions({new: true, runValidators: true});
+User.methods(['get', 'put', 'delete']);
+User.updateOptions({new: true, runValidators: true});
+User.after('post', errorHandler).after('put', errorHandler);
 
-module.exports = Resposta;
+module.exports = User;
