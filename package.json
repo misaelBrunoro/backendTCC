@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "express-query-int": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
+    "jw-paginate": "^1.0.4",
     "lodash": "^4.17.15",
     "mongoose": "^5.7.1",
     "mongoose-paginate": "^5.0.3",
