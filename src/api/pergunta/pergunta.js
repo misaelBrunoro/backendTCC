@@ -12,4 +12,6 @@ const perguntaSchema = new mongoose.Schema({
     createdAt: { type: Date, require: true, default: Date.now }
 });
 
+perguntaSchema.index({titulo: 'text', descricao: "text" });
+
 module.exports = restful.model('Pergunta', perguntaSchema);
