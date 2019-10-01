@@ -6,7 +6,7 @@ const errorHandler = require('../common/errorHandler');
 Pergunta.methods(['get', 'post', 'put', 'delete']);
 Pergunta.updateOptions({new: true, runValidators: true});
 Pergunta.after('post', errorHandler).after('put', errorHandler);
-
+// TODO montar objeto de busca em full text
 Pergunta.route('pagination', (req, res, next) => {
     const filter = req.body || null;
     const page = parseInt(req.query.page) || 1;
