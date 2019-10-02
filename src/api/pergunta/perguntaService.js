@@ -3,27 +3,43 @@ const paginate = require('jw-paginate');
 
 const errorHandler = require('../common/errorHandler');
 
-Pergunta.methods(['get', 'post', 'put', 'delete']);
+Pergunta.methods(['get', 'put', 'delete']);
 Pergunta.updateOptions({new: true, runValidators: true});
 Pergunta.after('post', errorHandler).after('put', errorHandler);
-// TODO montar objeto de busca em full text
+
+Pergunta.route('nova_pergunta.post', (req, res, next) => {
+    var perguntaOBJ = new Pergunta({usuario:    req.decoded._id, 
+                                    titulo:     req.body.titulo,
+                                    descricao:  req.body.descricao,
+                                    disciplina: req.body.disciplina
+                                    });
+
+    perguntaOBJ.save(function (error, perg) {
+        if(error) {
+            res.status(500).json({erros: [error]});
+        } else {
+            return res.json({perg});
+        }
+    });
+});
+
+// TODO montar objeto de busca por data
 Pergunta.route('pagination', (req, res, next) => {
     const filter = req.body || null;
     const page = parseInt(req.query.page) || 1;
     const query = {};
 
     if(filter.texto) {
-        query.titulo = filter.texto;
-        query.descricao = filter.texto;
+        query.$text = { $search: filter.texto };
+        query.$text = { $search: filter.texto };
     }
     if(filter.disciplina) {
         query.disciplina = filter.disciplina;
     }
     if(filter.dataPublicacao) {
-        query.createdAt = filter.dataPublicacao;
+        query.createdAt =  filter.dataPublicacao;
     }
-    console.log(query);
-
+    
     Pergunta.find(query)
         .populate('disciplina usuario')
         .exec((error, value) => {
