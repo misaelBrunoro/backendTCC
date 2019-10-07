@@ -7,7 +7,6 @@ const perguntaSchema = new mongoose.Schema({
     descricao: { type: String, require: true },
     resolvido: { type: Boolean, require: true, default: false },
     createdAt: { type: Date, require: true, default: Date.now },
-    anexo: { type: mongoose.Schema.Types.ObjectId, ref: 'Anexo' },
     disciplina: { type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina', require: true},
     resposta: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resposta'}]
     

@@ -24,24 +24,74 @@ Pergunta.route('nova_pergunta.post', (req, res, next) => {
     });
 });
 
-// Retorna uma pergunta buscando pelo seu ID
-Pergunta.route('findByID.get', (req, res, next) => { 
+// Busca uma pergunta e suas respostas por ID
+Pergunta.route('buscarPorID.get', (req, res, next) => {
+    const ID = req.query.id;
+    const page = parseInt(req.query.page) || 1;
+
+    Pergunta.find({_id: ID})
+            .populate({
+                        path: 'usuario',
+                        select: '_id nomeReal nomeVirtual email'
+                    })
+            .populate({
+                        path: 'resposta',
+                        populate: { path: 'usuario',
+                                select: '_id nomeReal nomeVirtual email'
+                        }
+                    })
+            .exec((error, value) => {
+                if(error) {
+                    res.status(500).json({erros: [error]});
+                } else {
+                    return res.json(paginateItems(value[0].resposta, page));
+                }
+            });
+})
+
+// Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
+Pergunta.route('detalhes.get', (req, res, next) => { 
     const ID = req.query.id;
     
-    Pergunta.find({ _id: ID })
-        .populate('disciplina usuario resposta')
-        .exec((error, value) => {
+    Pergunta.find({_id: ID})
+            .populate({
+                path: 'resposta',
+                match: { oficial: true},
+                populate: { path: 'usuario',
+                            select: '_id nomeReal nomeVirtual email'
+                        }
+            })    
+            .populate({ path: 'usuario',
+                        select: '_id nomeReal nomeVirtual email'
+                    })
+            .populate('disciplina')        
+            .exec((error, value) => {
+                if(error) {
+                    res.status(500).json({erros: [error]});
+                } else {
+                    return res.json(value);
+                }
+            });
+});
+
+Pergunta.route('responder.post', (req, res, next) => {
+    const ID = req.query.id;
+    const ID_p = req.query.id;
+    Pergunta.update(
+        { _id: ID_p },
+        {
+            $push: { resposta: ID }
+        }
+    )
+    .exec((error, value) => {
         if(error) {
             res.status(500).json({erros: [error]});
         } else {
             return res.json(value);
         }
-    });
-});
+        });
+})
 
-function respostaOficial(id) {
-    Pergunta.find();
-}
 // TODO montar objeto de busca por data
 Pergunta.route('pagination.post', (req, res, next) => {
     const filter = req.body || null;
@@ -60,14 +110,17 @@ Pergunta.route('pagination.post', (req, res, next) => {
     }
     
     Pergunta.find(query)
-        .populate('disciplina usuario')
+        .populate('disciplina')
+        .populate({ path: 'usuario',
+                    select: '_id nomeReal nomeVirtual email'
+                })
         .exec((error, value) => {
-        if(error) {
-            res.status(500).json({erros: [error]});
-        } else {
-            return res.json(paginateItems(value, page));
-        }
-    });
+            if(error) {
+                res.status(500).json({erros: [error]});
+            } else {
+                return res.json(paginateItems(value, page));
+            }
+        });
 });
 
 function paginateItems(value, page) {
