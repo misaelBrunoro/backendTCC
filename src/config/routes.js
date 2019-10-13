@@ -12,25 +12,25 @@ module.exports = function(server) {
     protectedApi.use(auth);
 
     // Rotas da Pergunta
-    const Pergunta = require('../api/Pergunta/PerguntaService');
+    const Pergunta = require('../api/pergunta/perguntaService');
     Pergunta.register(protectedApi, '/perguntas');
 
     // Rotas da Resposta
-    const Resposta = require('../api/Resposta/RespostaService');
+    const Resposta = require('../api/resposta/respostaService');
     Resposta.register(protectedApi, '/respostas');
 
-    // Rotas do Anexo
-    const Anexo = require('../api/Anexo/AnexoService');
-    Anexo.register(protectedApi, '/anexos');
+    // Rotas da Disciplina
+    const Disciplina = require('../api/disciplina/disciplinaService');
+    Disciplina.register(protectedApi, '/disciplinas');
 
-    // Rotas da Disciplinas
-    const Disciplinas = require('../api/disciplina/disciplinaService');
-    Disciplinas.register(protectedApi, '/disciplinas');
-
-    // Rotas do usuario
+    // Rotas do Usuario
     const User = require('../api/user/userService');
     User.register(protectedApi, '/users');
 
+    // Rotas do Comentario
+    const Comentario = require('../api/comentario/comentarioService');
+    Comentario.register(protectedApi, '/comentarios');
+    
     /*
     * Rotas abertas
     */

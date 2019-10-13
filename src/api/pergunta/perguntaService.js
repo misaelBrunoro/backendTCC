@@ -9,7 +9,8 @@ Pergunta.after('post', errorHandler).after('put', errorHandler);
 
 // Insere uma nova pergunta pegando o usuario que postou
 Pergunta.route('nova_pergunta.post', (req, res, next) => {
-    var perguntaOBJ = new Pergunta({usuario:    req.decoded._id, 
+    var perguntaOBJ = new Pergunta({
+                                    usuario:    req.decoded._id, 
                                     titulo:     req.body.titulo,
                                     descricao:  req.body.descricao,
                                     disciplina: req.body.disciplina
@@ -74,15 +75,16 @@ Pergunta.route('detalhes.get', (req, res, next) => {
             });
 });
 
-Pergunta.route('responder.post', (req, res, next) => {
-    const ID = req.query.id;
-    const ID_p = req.query.id;
+Pergunta.route('responder.get', (req, res, next) => {
+    const ID_pergunta = req.query.ID_pergunta;
+    const ID_resposta = req.query.ID_resposta;
     Pergunta.update(
-        { _id: ID_p },
+        { _id: ID_pergunta },
         {
-            $push: { resposta: ID }
+            $push: { resposta: ID_resposta }
         }
     )
+
     .exec((error, value) => {
         if(error) {
             res.status(500).json({erros: [error]});

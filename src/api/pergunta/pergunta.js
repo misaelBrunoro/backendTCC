@@ -9,7 +9,6 @@ const perguntaSchema = new mongoose.Schema({
     createdAt: { type: Date, require: true, default: Date.now },
     disciplina: { type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina', require: true},
     resposta: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resposta'}]
-    
 });
 
 perguntaSchema.index({titulo: 'text', descricao: "text" });
