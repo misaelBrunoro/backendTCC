@@ -75,25 +75,6 @@ Pergunta.route('detalhes.get', (req, res, next) => {
             });
 });
 
-Pergunta.route('responder.get', (req, res, next) => {
-    const ID_pergunta = req.query.ID_pergunta;
-    const ID_resposta = req.query.ID_resposta;
-    Pergunta.update(
-        { _id: ID_pergunta },
-        {
-            $push: { resposta: ID_resposta }
-        }
-    )
-
-    .exec((error, value) => {
-        if(error) {
-            res.status(500).json({erros: [error]});
-        } else {
-            return res.json(value);
-        }
-        });
-})
-
 // TODO montar objeto de busca por data
 Pergunta.route('pagination.post', (req, res, next) => {
     const filter = req.body || null;
