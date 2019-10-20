@@ -25,31 +25,6 @@ Pergunta.route('nova_pergunta.post', (req, res, next) => {
     });
 });
 
-// Busca uma pergunta e suas respostas por ID
-Pergunta.route('buscarPorID.get', (req, res, next) => {
-    const ID = req.query.id;
-    const page = parseInt(req.query.page) || 1;
-
-    Pergunta.find({_id: ID})
-            .populate({
-                        path: 'usuario',
-                        select: '_id nomeReal nomeVirtual email'
-                    })
-            .populate({
-                        path: 'resposta',
-                        populate: { path: 'usuario',
-                                select: '_id nomeReal nomeVirtual email'
-                        }
-                    })
-            .exec((error, value) => {
-                if(error) {
-                    res.status(500).json({erros: [error]});
-                } else {
-                    return res.json(paginateItems(value[0].resposta, page));
-                }
-            });
-})
-
 // Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
 Pergunta.route('detalhes.get', (req, res, next) => { 
     const ID = req.query.id;
