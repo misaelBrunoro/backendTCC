@@ -26,9 +26,9 @@ const login = (req, res, next) => {
                 expiresIn: "1 day"
             });
             
-            const { name, email } = user;
+            const { email, tipo } = user;
 
-            res.json({ name, email, token });
+            res.json({ email, tipo, token });
         } else {
             return res.status(400).send({ errors: ['Usuário/Senha inválidos'] });
         }

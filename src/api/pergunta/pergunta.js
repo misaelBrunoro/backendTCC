@@ -8,7 +8,8 @@ const perguntaSchema = new mongoose.Schema({
     resolvido: { type: Boolean, required: true, default: false },
     createdAt: { type: Date, required: true, default: Date.now },
     disciplina: { type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina', required: true},
-    resposta: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resposta'}]
+    resposta: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resposta'}],
+    likes: { type: Number, default: 0 }
 });
 
 perguntaSchema.index({titulo: 'text', descricao: "text" });

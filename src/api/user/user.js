@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema({
     nomeReal: { type: String, required: true },
     nomeVirtual: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, min: 6, max: 12, required: true }
+    password: { type: String, min: 6, max: 12, required: true },
+    tipo: {type: String, required: true, enum: [ "Aluno", "Professor", "Monitor", "Admin"] },
+    situacao: {type: String, required: true }
 })
 
 module.exports = restful.model('User', userSchema)
