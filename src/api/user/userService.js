@@ -7,7 +7,9 @@ User.after('post', errorHandler).after('put', errorHandler);
 
 User.route('current_user.get', (req, res, next) => {
     const email = req.decoded.email;
-    User.findOne({ email }, (error, value) => { 
+    User.findOne({ email })
+        .populate('disciplina')
+        .exec((error, value) => { 
         if(error) {
             res.status(500).json({erros: [error]});
         } else {
@@ -15,7 +17,8 @@ User.route('current_user.get', (req, res, next) => {
                            nomeReal: value.nomeReal,
                            nomeVirtual: value.nomeVirtual,
                            email: value.email,
-                           tipo: value.tipo 
+                           tipo: value.tipo,
+                           disciplina: value.disciplina
                         }
             return res.json(user);
         }   

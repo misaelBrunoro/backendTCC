@@ -35,8 +35,26 @@ Pergunta.route('detalhes.get', (req, res, next) => {
                 match: { oficial: true},
                 populate: { path: 'usuario',
                             select: '_id nomeReal nomeVirtual email'
-                        }
+                        },
             })    
+            .populate({ path: 'usuario',
+                        select: '_id nomeReal nomeVirtual email'
+                    })
+            .populate('disciplina')        
+            .exec((error, value) => {
+                if(error) {
+                    res.status(500).json({erros: [error]});
+                } else {
+                    return res.json(value);
+                }
+            });
+});
+
+// Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
+Pergunta.route('getByID.get', (req, res, next) => { 
+    const ID = req.query.id;
+    
+    Pergunta.find({_id: ID})            
             .populate({ path: 'usuario',
                         select: '_id nomeReal nomeVirtual email'
                     })

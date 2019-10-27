@@ -17,7 +17,6 @@ const sendErrorsFromDB = (res, dbErrors) => {
 const login = (req, res, next) => {
     const email = req.body.email || '';
     const password = req.body.password || '';
-
     User.findOne({ email }, (err, user) => {
         if (err) {
             return sendErrorsFromDB(res, err);
@@ -71,7 +70,7 @@ const signup = (req, res, next) => {
         } else if (user) {
             return res.status(400).send({ errors: ['Usuário já cadastrado.'] });
         } else {
-            const newUser = new User({nomeReal, nomeVirtual, email, password: passwordHash });
+            const newUser = new User({ nomeReal, nomeVirtual, email, password: passwordHash, tipo: 'Aluno', situacao: 'Ativo' });
 
             newUser.save(err => {
                 if (err) {
