@@ -54,7 +54,7 @@ const signup = (req, res, next) => {
     }
     if(!password.match(passwordRegex)) {
         return res.status(400).send({errors: [ 'Senha precisar ter: uma letra maiúscula, uma letra'+ 
-        'minúscula, um número, uma caractere especial(@#$%) e tamanho entre 6-20.']});
+        ' minúscula, um número, um caractere especial(@#$%) e tamanho entre 6-20.']});
     }
 
     const salt = bcrypt.genSaltSync();

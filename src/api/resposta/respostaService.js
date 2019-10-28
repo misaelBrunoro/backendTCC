@@ -57,32 +57,32 @@ Resposta.route('oficializar', (req, res, next) => {
     const ID_pergunta = req.query.ID_pergunta;
     const ID_resposta = req.query.ID_resposta;
     const ID_resposta_anterior = req.query.ID_resposta_anterior;
-
     Pergunta.updateOne(
                     { _id: ID_pergunta }, {resolvido: true},
                     function (error) {
                         if(error) {
                             res.status(500).json({erros: [error]});
                         } else {
-                            if (ID_resposta_anterior) {
+                            if (ID_resposta_anterior !== 'null') {
                                 Resposta.updateOne(
                                     { _id: ID_resposta_anterior }, { oficial: false },
-                                function (error) {
-                                    if(error) {
-                                        res.status(500).json({erros: [error]});
-                                    }
-                                });
+                                    function (error) {
+                                        if(error) {
+                                            res.status(500).json({erros: [error]});
+                                        }
+                                        Resposta.updateOne(
+                                            { _id: ID_resposta }, { oficial: true },
+                                            function (error) {
+                                                if(error) {
+                                                    res.status(500).json({erros: [error]});
+                                                }
+                                        });
+                                    });
                             }
-                            Resposta.updateOne(
-                                { _id: ID_resposta }, { oficial: true },
-                            function (error) {
-                                if(error) {
-                                    res.status(500).json({erros: [error]});
-                                }
-                            });
+                            
                         }
-                    });
-    return res.json({value: "Sucesso"});
+        return res.json({value: "Sucesso"});
+    });
 });
 
 function paginateItems(value, page) {
