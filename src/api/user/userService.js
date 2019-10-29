@@ -46,6 +46,7 @@ User.route('alterar_perfil.post', (req, res, next) => {
         query.email = usuario.email;
     }
     if(usuario.senhaAtual && usuario.novaSenha) {
+        
         if(!usuario.novaSenha.match(passwordRegex)) {
             return res.status(400).send({errors: [ 'Senha precisar ter: uma letra maiúscula, uma letra'+ 
             ' minúscula, um número, um caractere especial(@#$%) e tamanho entre 6-20.']});
