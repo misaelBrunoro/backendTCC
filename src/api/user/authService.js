@@ -21,13 +21,18 @@ const login = (req, res, next) => {
         if (err) {
             return sendErrorsFromDB(res, err);
         } else if (user && bcrypt.compareSync(password, user.password)) {
-            const token = jwt.sign(user.toJSON(), env.authSecret, {
-                expiresIn: "1 day"
-            });
+            if ( user.situacao !== 'Inativo') {
+                const token = jwt.sign(user.toJSON(), env.authSecret, {
+                    expiresIn: "1 day"
+                });
+                
+                const { email, tipo } = user;
+    
+                res.json({ email, tipo, token });
+            } else {
+                return res.status(400).send({ errors: ['Usuário aguardndo ativação'] });
+            }
             
-            const { email, tipo } = user;
-
-            res.json({ email, tipo, token });
         } else {
             return res.status(400).send({ errors: ['Usuário/Senha inválidos'] });
         }
@@ -48,6 +53,7 @@ const signup = (req, res, next) => {
     const email = req.body.email || '';
     const password = req.body.password || '';
     const confirmPassword = req.body.confirm_password || '';
+    const tipo = req.body.tipo || ''; 
 
     if(!email.match(emailRegex)) {
         return res.status(400).send({errors: ['O e-mail informado está inválido']});
@@ -70,7 +76,14 @@ const signup = (req, res, next) => {
         } else if (user) {
             return res.status(400).send({ errors: ['Usuário já cadastrado.'] });
         } else {
-            const newUser = new User({ nomeReal, nomeVirtual, email, password: passwordHash, tipo: 'Aluno', situacao: 'Ativo' });
+
+            const newUser = new User({ nomeReal, nomeVirtual, email, password: passwordHash, tipo });
+            
+            if (tipo == 'Aluno') {
+                newUser.situacao = 'Ativo'; 
+            } else if ( tipo == 'Professor') {
+                newUser.situacao = 'Inativo';
+            }
 
             newUser.save(err => {
                 if (err) {
