@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, min: 6, max: 12, required: true },
     tipo: {type: String, required: true, enum: [ "Aluno", "Professor", "Monitor", "Admin"] },
-    disciplina: { type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina' },
+    disciplina: [{type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina'}],
     situacao: { type: String, required: true, enum: [ "Ativo", "Inativo"] }
 })
 

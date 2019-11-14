@@ -78,6 +78,14 @@ Resposta.route('oficializar', (req, res, next) => {
                                                 }
                                         });
                                     });
+                            } else {
+                                Resposta.updateOne(
+                                    { _id: ID_resposta }, { oficial: true },
+                                    function (error) {
+                                        if(error) {
+                                            res.status(500).json({erros: [error]});
+                                        }
+                                });
                             }
                             
                         }

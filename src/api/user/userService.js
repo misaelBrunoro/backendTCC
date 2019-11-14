@@ -13,7 +13,7 @@ User.route('current_user.get', (req, res, next) => {
         .exec((error, value) => { 
         if(error) {
             res.status(500).json({erros: [error]});
-        } else {
+        } else if (value) {
             const user = { _id: value._id,
                            nomeReal: value.nomeReal,
                            nomeVirtual: value.nomeVirtual,
@@ -79,4 +79,19 @@ function updateUser (email, query, res) {
         return res.json(value);
     });
 }
+
+User.route('search_users.get', (req, res, next) => {
+    const tipo = req.query.tipo;
+
+    User.find({tipo: tipo})
+        .populate('disciplina') 
+        .exec((error, value) => { 
+            if(error) {
+                res.status(500).json({erros: [error]});
+            } else if (value) {
+                return res.json(value);
+            }
+        });
+});
+
 module.exports = User;
