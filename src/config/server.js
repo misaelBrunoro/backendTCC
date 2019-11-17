@@ -1,5 +1,5 @@
 // Porta de escuta
-const port = 80;
+const port = process.env.PORT || 80;
 
 // Dependencias
 const bodyParser = require('body-parser');
