@@ -1,5 +1,5 @@
 // Porta de escuta
-const port = 3003;
+const port = 80;
 
 // Dependencias
 const bodyParser = require('body-parser');
