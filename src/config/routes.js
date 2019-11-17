@@ -37,9 +37,9 @@ module.exports = function(server) {
     const openApi = express.Router();
     server.use('/oapi', openApi);
 
-    const AuthService = require('../api/user/AuthService');
+    const authService = require('../api/user/authService');
     
-    openApi.post('/login', AuthService.login);
-    openApi.post('/signup', AuthService.signup);
-    openApi.post('/validateToken', AuthService.validateToken);
+    openApi.post('/login', authService.login);
+    openApi.post('/signup', authService.signup);
+    openApi.post('/validateToken', authService.validateToken);
 }   
