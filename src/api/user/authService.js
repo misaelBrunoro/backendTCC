@@ -49,7 +49,7 @@ const validateToken = (req, res, next) => {
 
 const signup = (req, res, next) => {
     const nomeVirtual = req.body.nomeVirtual || '';
-    const nomeReal = req.body.nomeVirtual || '';
+    const nomeReal = req.body.nomeReal|| '';
     const email = req.body.email || '';
     const password = req.body.password || '';
     const confirmPassword = req.body.confirm_password || '';
