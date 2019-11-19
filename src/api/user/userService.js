@@ -82,6 +82,7 @@ function updateUser (email, query, res) {
 
 User.route('search_users.get', (req, res, next) => {
     const tipo = req.query.tipo;
+    const page = parseInt(req.query.page) || 1;
 
     User.find({tipo: tipo})
         .populate('disciplina') 
@@ -92,6 +93,18 @@ User.route('search_users.get', (req, res, next) => {
                 return res.json(value);
             }
         });
+});
+
+User.route('ativar_user', (req, res, next) => { 
+    const ativo = req.query.ativo;
+    const ID_user = req.query._id;
+
+    User.updateOne({_id: ID_user}, {situacao: ativo}, function (error, value) {
+        if(error) {
+            res.status(500).json({erros: [error]});
+        }
+        return res.json(value);
+    });
 });
 
 module.exports = User;
