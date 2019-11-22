@@ -107,4 +107,38 @@ User.route('ativar_user', (req, res, next) => {
     });
 });
 
+User.route('user_porID', (req, res, next) => { 
+    const ID_user = req.query._id;
+
+    User.findOne({_id: ID_user}, function(error, value) {
+        if(error) {
+            res.status(500).json({erros: [error]});
+        } 
+        return res.json(value);
+    });
+});
+
+User.route('vincular_disciplina', (req, res, next) => { 
+    const ID_user = req.query.user_id;
+    const ID_disciplina = req.query._id;
+    const vinculo = req.query.vincular;
+
+    if (vinculo == 'Adicionar') {
+        User.updateOne({_id: ID_user}, { $push: { disciplina: ID_disciplina } }, function (error, value) {
+            if(error) {
+                res.status(500).json({erros: [error]});
+            }
+            return res.json(value);
+        });
+    } else {
+        User.updateOne({_id: ID_user}, { $pull: { disciplina: ID_disciplina } }, function (error, value) {
+            if(error) {
+                res.status(500).json({erros: [error]});
+            }
+            return res.json(value);
+        });
+    }
+    
+});
+
 module.exports = User;
