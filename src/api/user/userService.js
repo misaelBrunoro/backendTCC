@@ -141,4 +141,23 @@ User.route('vincular_disciplina', (req, res, next) => {
     
 });
 
+User.route('tornar_monitor', (req, res, next) => { 
+    const ID_user = req.query._id;
+    const tipo = req.query.tipo;
+    const query = {};
+
+    query.tipo = tipo;
+
+    if(tipo == 'Aluno') {
+        query.$set = { disciplina: []};
+    }
+
+    User.updateOne({_id: ID_user}, query, function (error, value) {
+        if(error) {
+            res.status(500).json({erros: [error]});
+        }
+        return res.json(value);
+    });
+});
+
 module.exports = User;

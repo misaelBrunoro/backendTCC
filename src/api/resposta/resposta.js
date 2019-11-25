@@ -5,7 +5,7 @@ const respostaSchema = new mongoose.Schema({
     usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     descricao: { type: String, require: true },
     oficial: { type: Boolean, require: true, default: false },
-    createdAt: { type: Date, require: true, default: Date.now },
+    createdAt: { type: Date, require: true, default: new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()) },
     comentario: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comentario'}],
     likes: { type: Number, default: 0 }
 });

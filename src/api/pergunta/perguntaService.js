@@ -73,6 +73,8 @@ Pergunta.route('pagination.post', (req, res, next) => {
     const filter = req.body || null;
     const page = parseInt(req.query.page) || 1;
     const query = {};
+    
+    var aggregate = {};
 
     if(filter.texto) {
         query.$text = { $search: filter.texto };
@@ -82,10 +84,20 @@ Pergunta.route('pagination.post', (req, res, next) => {
         query.disciplina = filter.disciplina;
     }
     if(filter.dataPublicacao) {
-        query.createdAt =  filter.dataPublicacao;
+        var date = new Date(filter.dataPublicacao);
+        query.createdAt = filter.dataPublicacao;
     }
-    
+    if(filter.minhasPerguntas) {
+        query.usuario = req.decoded._id;
+    }
+    if(filter.naoRespondidas) {
+        query.resolvido = false;
+    }
+    if(filter.respondidas) {
+        query.resolvido = true;
+    }
     Pergunta.find(query)
+        .sort({_id:-1})  
         .populate('disciplina')
         .populate({ path: 'usuario',
                     select: '_id nomeReal nomeVirtual email'

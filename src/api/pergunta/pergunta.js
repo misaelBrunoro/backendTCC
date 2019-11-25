@@ -6,7 +6,7 @@ const perguntaSchema = new mongoose.Schema({
     titulo: { type: String, required: true },
     descricao: { type: String, required: true },
     resolvido: { type: Boolean, required: true, default: false },
-    createdAt: { type: Date, required: true, default: Date.now },
+    createdAt: { type: Date, required: true, default: new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()) },
     disciplina: { type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina', required: true},
     resposta: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resposta'}],
     likes: { type: Number, default: 0 }

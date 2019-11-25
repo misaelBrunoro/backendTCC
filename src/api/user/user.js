@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, min: 6, max: 12, required: true },
     tipo: {type: String, required: true, enum: [ "Aluno", "Professor", "Monitor", "Admin"] },
     disciplina: [{type: mongoose.Schema.Types.ObjectId, ref: 'Disciplina'}],
-    situacao: { type: String, required: true, enum: [ "Ativo", "Inativo"] }
+    situacao: { type: String, required: true, enum: [ "Ativo", "Inativo"] },
+    createdAt: { type: Date, require: true, default: new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()) }
 })
 
 module.exports = restful.model('User', userSchema)
