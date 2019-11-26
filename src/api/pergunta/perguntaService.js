@@ -51,45 +51,6 @@ Pergunta.route('detalhes.get', (req, res, next) => {
             });
 });
 
-// Retorna um array contendo os dados para serem mostrados nos graficos
-Pergunta.route('retornar_dados', (req, res, next) => {
-    let arrayRetorno = [];
-
-    Disciplina.find( )
-              .exec((error, value) => {
-                if(error) {
-                    res.status(500).json({erros: [error]});
-                } else {
-                    value.forEach( element => {
-                        Pergunta.find({disciplina: element._id})
-                                .exec((error, value) => {
-                                    if(error) {
-                                        res.status(500).json({erros: [error]});
-                                    } else {                               
-                                        var objRetorno = {
-                                            disciplina: element.nome,
-                                            quantidade: 0,
-                                            respondidas: 0,
-                                            naoRespondidas: 0
-                                        }
-                                        value.forEach( pergunta => {
-                                            if(pergunta.resolvido) {
-                                                objRetorno.respondidas++;
-                                            } else {
-                                                objRetorno.naoRespondidas++;
-                                            }
-                                        });
-                                        objRetorno.quantidade = value.length;
-                                        arrayRetorno.push(objRetorno);                              
-                                    }
-                                });
-                    });    
-                    return res.json(arrayRetorno);                  
-                }
-            });
-});
-
-
 // Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
 Pergunta.route('getByID.get', (req, res, next) => { 
     const ID = req.query.id;
