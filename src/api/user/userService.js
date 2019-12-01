@@ -7,8 +7,7 @@ User.updateOptions({new: true, runValidators: true});
 User.after('post', errorHandler).after('put', errorHandler);
 
 User.route('current_user.get', (req, res, next) => {
-    const email = req.decoded.email;
-    User.findOne({ email })
+    User.findOne({ email: req.decoded.email })
         .populate('disciplina')
         .exec((error, value) => { 
         if(error) {
@@ -81,10 +80,7 @@ function updateUser (email, query, res) {
 }
 
 User.route('search_users.get', (req, res, next) => {
-    const tipo = req.query.tipo;
-    const page = parseInt(req.query.page) || 1;
-
-    User.find({tipo: tipo})
+    User.find({tipo: req.query.tipo})
         .populate('disciplina') 
         .exec((error, value) => { 
             if(error) {
@@ -95,11 +91,8 @@ User.route('search_users.get', (req, res, next) => {
         });
 });
 
-User.route('ativar_user', (req, res, next) => { 
-    const ativo = req.query.ativo;
-    const ID_user = req.query._id;
-
-    User.updateOne({_id: ID_user}, {situacao: ativo}, function (error, value) {
+User.route('ativar_user', (req, res, next) => {
+    User.updateOne({_id: req.query._id}, {situacao: req.query.ativo}, function (error, value) {
         if(error) {
             res.status(500).json({erros: [error]});
         }
@@ -107,10 +100,8 @@ User.route('ativar_user', (req, res, next) => {
     });
 });
 
-User.route('user_porID', (req, res, next) => { 
-    const ID_user = req.query._id;
-
-    User.findOne({_id: ID_user}, function(error, value) {
+User.route('user_porID', (req, res, next) => {
+    User.findOne({_id: req.query._id}, function(error, value) {
         if(error) {
             res.status(500).json({erros: [error]});
         } 
@@ -119,45 +110,53 @@ User.route('user_porID', (req, res, next) => {
 });
 
 User.route('vincular_disciplina', (req, res, next) => { 
-    const ID_user = req.query.user_id;
-    const ID_disciplina = req.query._id;
-    const vinculo = req.query.vincular;
-
-    if (vinculo == 'Adicionar') {
-        User.updateOne({_id: ID_user}, { $push: { disciplina: ID_disciplina } }, function (error, value) {
+    if (req.query.vincular == 'Adicionar') {
+        User.updateOne({_id: req.query.user_id}, { $push: { disciplina: req.query._id } }, function (error, value) {
             if(error) {
                 res.status(500).json({erros: [error]});
             }
             return res.json(value);
         });
     } else {
-        User.updateOne({_id: ID_user}, { $pull: { disciplina: ID_disciplina } }, function (error, value) {
+        User.updateOne({_id: req.query.user_id}, { $pull: { disciplina: req.query._id } }, function (error, value) {
             if(error) {
                 res.status(500).json({erros: [error]});
             }
             return res.json(value);
         });
     }
-    
 });
 
-User.route('tornar_monitor', (req, res, next) => { 
-    const ID_user = req.query._id;
-    const tipo = req.query.tipo;
+User.route('tornar_monitor', (req, res, next) => {
     const query = {};
+    query.tipo = req.query.tipo;
 
-    query.tipo = tipo;
-
-    if(tipo == 'Aluno') {
+    if(req.query.tipo == 'Aluno') {
         query.$set = { disciplina: []};
     }
 
-    User.updateOne({_id: ID_user}, query, function (error, value) {
+    User.updateOne({_id: req.query._id}, query, function (error, value) {
         if(error) {
             res.status(500).json({erros: [error]});
         }
         return res.json(value);
     });
+});
+
+User.route('filtrar_user', (req, res, next) => { 
+    const query = {};
+
+    query.$text = { $search: req.body.texto };
+    query.tipo = req.query.tipo;
+
+    User.find(query)
+        .exec((error, value) => {
+            if(error) {
+                res.status(500).json({erros: [error]});
+            } else {
+                return res.json(value);
+            }
+        });
 });
 
 module.exports = User;

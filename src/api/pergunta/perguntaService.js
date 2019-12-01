@@ -28,9 +28,7 @@ Pergunta.route('nova_pergunta.post', (req, res, next) => {
 
 // Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
 Pergunta.route('detalhes.get', (req, res, next) => { 
-    const ID = req.query.id;
-    
-    Pergunta.find({_id: ID})
+    Pergunta.find({_id: req.query.id})
             .populate({
                 path: 'resposta',
                 match: { oficial: true},
@@ -53,9 +51,7 @@ Pergunta.route('detalhes.get', (req, res, next) => {
 
 // Retorna uma pergunta e sua resposta oficial buscando pelo seu ID
 Pergunta.route('getByID.get', (req, res, next) => { 
-    const ID = req.query.id;
-    
-    Pergunta.find({_id: ID})            
+    Pergunta.find({_id: req.query.id})            
             .populate({ path: 'usuario',
                         select: '_id nomeReal nomeVirtual email'
                     })
@@ -69,23 +65,19 @@ Pergunta.route('getByID.get', (req, res, next) => {
             });
 });
 
-// TODO montar objeto de busca por data
+// Realizar busca com base nos filstros
 Pergunta.route('pagination.post', (req, res, next) => {
     const filter = req.body || null;
     const page = parseInt(req.query.page) || 1;
     const query = {};
-    
-    var aggregate = {};
 
     if(filter.texto) {
-        query.$text = { $search: filter.texto };
         query.$text = { $search: filter.texto };
     }
     if(filter.disciplina) {
         query.disciplina = filter.disciplina;
     }
     if(filter.dataPublicacao) {
-        var date = new Date(filter.dataPublicacao);
         query.createdAt = filter.dataPublicacao;
     }
     if(filter.minhasPerguntas) {
