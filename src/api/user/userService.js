@@ -146,9 +146,10 @@ User.route('tornar_monitor', (req, res, next) => {
 User.route('filtrar_user', (req, res, next) => { 
     const query = {};
 
-    query.$text = { $search: req.body.texto };
-    query.tipo = req.query.tipo;
-
+    if (req.body.texto){
+        query.$text = { $search: req.body.texto };
+    }
+    query.tipo = req.body.tipo;
     User.find(query)
         .exec((error, value) => {
             if(error) {
