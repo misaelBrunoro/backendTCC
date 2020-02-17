@@ -30,7 +30,7 @@ module.exports = function(server) {
     // Rotas do Comentario
     const Comentario = require('../api/comentario/comentarioService');
     Comentario.register(protectedApi, '/comentarios');
-    
+
     /*
     * Rotas abertas
     */

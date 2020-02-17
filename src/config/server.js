@@ -12,8 +12,14 @@ server.use(bodyParser.json());
 
 server.use(cors);
 
-server.listen(port, function() {
+var app = server.listen(port, function() {
     console.log(`Backend is running in port ${port}.`);
+});
+
+var io = require('socket.io').listen(app);
+
+io.sockets.on('connection', function (socket) {
+    console.log('new connection made.')
 });
 
 module.exports = server;
