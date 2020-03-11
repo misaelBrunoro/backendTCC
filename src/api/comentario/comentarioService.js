@@ -35,7 +35,7 @@ Comentario.route('novo_comentario.post', (req, res, next) => {
 Comentario.route('retorna_comentarios.get', (req, res, next) => {
     const ID_resposta = req.query.ID_resposta;
 
-    Resposta.find( {"_id": ID_resposta})
+    Resposta.find( {"_id": ID_resposta })
             .populate({
                 path: 'comentario',
                 populate: { path: 'usuario',

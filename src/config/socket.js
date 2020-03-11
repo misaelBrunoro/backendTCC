@@ -4,16 +4,16 @@ module.exports = function(app) {
     io.sockets.on('connection', function (socket) {
         socket.on('join', function(data) {
             socket.join(data.room);
-            socket.broadcast.to(data.room).emit('new user joined', {user_id: data.user_id, user: data.user, message: 'has joined this room.'});
+            socket.broadcast.to(data.room).emit('new user joined', {user_id: data.user_id, room_id: room_id, user: data.user, message: 'has joined this room.'});
         });
         
         socket.on('leave', function(data) {
-            socket.broadcast.to(data.room).emit('left room', {user_id: data.user_id, user: data.user, message: 'has left this room.'});
+            socket.broadcast.to(data.room).emit('left room', {user_id: data.user_id, room_id: room_id, user: data.user, message: 'has left this room.'});
             socket.leave(data.room);
         }); 
 
         socket.on('message', function(data) {
-            io.in(data.room).emit('new message', {user_id: data.user_id, user: data.user, message: data.message});
+            io.in(data.room).emit('new message', {user_id: data.user_id, room_id: room_id, user: data.user, message: data.message});
         }); 
     });
 }
