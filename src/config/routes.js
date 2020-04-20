@@ -31,6 +31,9 @@ module.exports = function(server) {
     const Comentario = require('../api/comentario/comentarioService');
     Comentario.register(protectedApi, '/comentarios');
 
+    const Chat = require('../api/chat/chatService').Chat;
+    Chat.register(protectedApi, '/chat')
+
     /*
     * Rotas abertas
     */

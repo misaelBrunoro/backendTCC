@@ -3,18 +3,18 @@ const Chat = require('./chat');
 function inserirMensagem(data) {
     var chatObj = new Chat({
             usuario:    data.user_id,
-            mensagem:  data.menssage,
-            sala:      data.room_id
+            mensagem:  data.message,
+            sala:      data.room
         });
 
     chatObj.save();
 }
 
 // Insere um novo comentario pegando o usuario que postou
-Chat.route('retorna_mensagens.get', (req, res, next) => {
+Chat.route('retornarMensagens.get', (req, res, next) => {
     const ID_sala = req.query.ID_sala;
 
-    Chat.find({"_id": ID_sala })
+    Chat.find({"sala": ID_sala })
         .populate({
             path: 'usuario',
             select: '_id nomeReal nomeVirtual email'
@@ -27,3 +27,5 @@ Chat.route('retorna_mensagens.get', (req, res, next) => {
             }
         });
 });
+
+module.exports = {inserirMensagem , Chat}
