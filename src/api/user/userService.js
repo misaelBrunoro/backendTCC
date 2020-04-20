@@ -100,15 +100,6 @@ User.route('ativar_user', (req, res, next) => {
     });
 });
 
-User.route('user_porID', (req, res, next) => {
-    User.findOne({_id: req.query._id}, function(error, value) {
-        if(error) {
-            res.status(500).json({erros: [error]});
-        } 
-        return res.json(value);
-    });
-});
-
 User.route('vincular_disciplina', (req, res, next) => { 
     if (req.query.vincular == 'Adicionar') {
         User.updateOne({_id: req.query.user_id}, { $push: { disciplina: req.query._id } }, function (error, value) {
