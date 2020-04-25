@@ -10,11 +10,18 @@ function inserirMensagem(data) {
     chatObj.save();
 }
 
-// Insere um novo comentario pegando o usuario que postou
-Chat.route('retornarMensagens.get', (req, res, next) => {
+// Busca mensagens filtradas
+Chat.route('retornarMensagensFiltradas.post', (req, res, next) => {
     const ID_sala = req.query.ID_sala;
+    const query = {};
 
-    Chat.find({"sala": ID_sala })
+    query.sala = ID_sala;
+
+    if (req.body.texto) {
+        query.$text = { $search: req.body.texto };
+    }
+    
+    Chat.find(query)
         .populate({
             path: 'usuario',
             select: '_id nomeReal nomeVirtual email'

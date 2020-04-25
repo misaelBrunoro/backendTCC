@@ -8,4 +8,6 @@ const chatSchema = new mongoose.Schema({
     createdAt: { type: Date, require: true, default: new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()) }
 });
 
+chatSchema.index({mensagem: 'text'});
+
 module.exports = restful.model('Chat', chatSchema);
